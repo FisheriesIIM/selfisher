@@ -58,7 +58,7 @@ mkTMBStruc <- function(rformula, pformula, dformula,
   if (is.null(offset <- model.offset(fr)))
       offset <- rep(0,nobs)
 
-  if (is.null(total <- fr[["(total)"]]))
+  if (is.null(total <- fr[["total"]]))
     total <- rep(1,nobs) #needed for predict function
 
   #FLAGS
@@ -595,11 +595,11 @@ summary.selfisher <- function(object,...)
     ##	      nor compute VarCorr() unless is(re, "reTrms"):
     varcor <- VarCorr(object)
     #If the model is simple, extract Lp and SR
-    if(all(names(object$fit$par)=="betar")) {
+    if(all(names(object$fit$par)%in%c("betar", "betad"))) {
       SR <- summary(object$sdr, "report")["SR",]
-      retention <- data.frame(p=object$obj$report()$retp, 
-            Lp.Est=summary(object$sdr, "report")[1:length(object$obj$report()$retp),1], 
-            Lp.Std.Err=summary(object$sdr, "report")[1:length(object$obj$report()$retp),2])
+      retention <- data.frame(prob=object$obj$report()$retp, 
+            Size.Est=summary(object$sdr, "report")[1:length(object$obj$report()$retp),1], 
+            Size.Std.Err=summary(object$sdr, "report")[1:length(object$obj$report()$retp),2])
     } else {
       SR <- NULL
       retention <- NULL

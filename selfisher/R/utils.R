@@ -410,5 +410,5 @@ drop.special2 <- function(x, value=quote(offset), preserve = NULL) {
 
 ## renamed weights to total so need replacement for stats::model.weights
 model.total <- function (x) {
-  x$"(total)"
+  x$total
 }

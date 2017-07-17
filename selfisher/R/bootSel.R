@@ -13,13 +13,12 @@ L50SR <- function(x) {
 	return(c("L50"=L50,"SR"=SR)) 
 }
 
-##' a function that refits the same model to a new data set
-##' @param x a fitted \code{selfisher} object
-##' @param newdata
-##' @export
-refit.selfisher <- funciton(x, newdata) {
-	
-}
+#' a function that refits the same model to a new data set
+#' @param x a fitted \code{selfisher} object
+#' @param newdata
+#refit.selfisher <- funciton(x, newdata) {
+#	
+#}
 
 ##' Perform bootstrap.
 ##'
@@ -81,9 +80,9 @@ bootSel <- function(x, FUN = L50SR, nsim = 1, seed = NULL,
         yobs <- x$frame[,x$modelInfo$respCol]
         if (type=="double") {
            #resample hauls
-           hauls <- unique(x$frame[,"(haul)"])
+           hauls <- unique(x$frame[,haul])
            if(length(hauls)<=1) stop("Double bootstrap is only useful for multiple hauls. Maybe you want 'nonparameteric'.")
-           splith <- split(x$frame, x$frame[,"(haul)"])
+           splith <- split(x$frame, x$frame[,haul])
            #create nsim new frames in ss
            newhauls <- replicate(nsim, sample(hauls, length(hauls), replace=TRUE))
 
@@ -91,7 +90,7 @@ bootSel <- function(x, FUN = L50SR, nsim = 1, seed = NULL,
            newframe <- apply(newhauls, 2, function(i){ do.call(rbind, splith[i])})
            ss <- lapply(newframe, function(z) {
                    #overwrite the response variable
-                   z[,x$modelInfo$respCol] <- rbinom(nrow(z), size=z[,"(total)"], prob=z[,x$modelInfo$respCol])/z[,"(total)"]
+                   z[,x$modelInfo$respCol] <- rbinom(nrow(z), size=z[,"total"], prob=z[,x$modelInfo$respCol])/z[,"total"]
                    return(z)
                  })
         } else {
@@ -100,7 +99,7 @@ bootSel <- function(x, FUN = L50SR, nsim = 1, seed = NULL,
               ss <- replicate(nsim, function() {
                       z  <- x$frame
                       #overwrite the response variable
-                      z[,z$modelInfo$respCol] <- rbinom(length(z), z[,"(total)"], z[,z$modelInfo$respCol])/z[,"(total)"]
+                      z[,z$modelInfo$respCol] <- rbinom(length(z), z[,"total"], z[,z$modelInfo$respCol])/z[,"total"]
                       return(z)
                     })
 
